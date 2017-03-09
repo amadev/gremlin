@@ -3,7 +3,9 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.8.0"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/java.jdbc "0.7.0-alpha2"]
+                 [mysql/mysql-connector-java "5.1.18"]]
   :main ^:skip-aot migration-tests.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
