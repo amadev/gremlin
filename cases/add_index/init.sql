@@ -26,3 +26,5 @@ CREATE TABLE `build_requests` (
   KEY `build_requests_project_id_idx` (`project_id`),
   KEY `build_requests_instance_uuid_idx` (`instance_uuid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+drop table build_requests;

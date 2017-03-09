@@ -1,6 +1,7 @@
 (ns migration-tests.core
   (:require [clojure.java.jdbc :as jdbc]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.tools.logging :as log])
   (:gen-class))
 
 (def db-spec
@@ -22,8 +23,12 @@
 (defn exec-sql-file [file-name]
   (jdbc/db-do-commands db-spec (split-sql-statements (slurp file-name))))
 
+(defn case-name [case name]
+  (str "cases/" case "/" name ".sql"))
+
 (defn -main
   [& args]
-  (let [case "add_index"]
-    (exec-sql-file (str "cases/" case "/init.sql"))
+  (let [cs "add_index"]
+    (log/debug "Starting ...")
+    (exec-sql-file (case-name cs "init"))
     (println "Done!")))
