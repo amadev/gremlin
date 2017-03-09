@@ -1,0 +1,25 @@
+* Mysql database migration test
+
+** What is it?
+
+This tool aims to check whether migration operation changes db behavior drastically.
+
+Each case consists of steps:
+
+- 1. Initialize DB structure (init.sql).
+- 2. Load test data (data.csv).
+- 3*. Start migration procedure (migrate.sql).
+- 4. Execute statement (execute.sql).
+- 5. Cleanup (cleanup.sql).
+
+Fisrt, it runs steps 1, 2, 4, 5 and provides execution time of step 4 as result.
+Second, it runs steps 1, 2, 3, 4, 5 where steps 3, 4 go in parallel
+and provides excecution time of steps 3 and 4.
+
+** How can I run it?
+
+ls cases
+start_mt <case-name> -n10 -r1
+
+Results:
+| Init | Ex.time | Mig.time | Ex2.time | Ex2.qm |
