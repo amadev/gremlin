@@ -1,7 +1,10 @@
-import string
 import random
+import string
+import sys
+
 from toposort import toposort_flatten
 import yaml
+
 
 AUTO_INCREMENTS = {}
 DB = None
@@ -66,7 +69,7 @@ def get_meta(schema, db, table):
 
 def get_tables_order(schema, db):
     deps = {}
-    _ref = lambda t, c: deps[table].add(t)
+    _ref = lambda t, c: deps[table].add(t)  # noqa
     for table in get_tables(schema, db):
         deps[table] = set()
         for field, value in get_fields(schema, db, table).items():
@@ -87,4 +90,4 @@ def main(schema):
 
 
 if __name__ == '__main__':
-    main(yaml.safe_load(open('schema.yaml')))
+    main(yaml.safe_load(open(sys.argv[1])))
