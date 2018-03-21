@@ -92,9 +92,13 @@ def main(schema):
             rows = generate_table_rows(schema, db, table)
             REFS[(db, table)] = rows
             with open('%s/%s' % (path, table), 'w') as f:
-                writer = csv.writer(f)
+                writer = csv.writer(f,
+                                    delimiter=';',
+                                    lineterminator='\r\n',
+                                    quoting=csv.QUOTE_ALL,
+                                    quotechar='"')
                 writer.writerows(rows)
-            with open('%s/%s' % (path, 'order'), 'w') as f:
+            with open('%s/%s' % (path, '.order'), 'w') as f:
                 f.write(' '.join(orders[db]))
 
 

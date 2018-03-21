@@ -2,15 +2,15 @@ nova:
   instance:
       id: auto_increment(1)
       name: random_name(32)
-      desc: random_name(32)
-      flavor: ref("flavor", "id")
+      description: random_name(32)
+      flavor_id: ref("flavor", "id")
       max_num: 1
       __meta__:
           count: 10
   flavor:
       id: auto_increment(100)
       name: random_name(32)
-      type: ref("flavor_type", "id")
+      type_id: ref("flavor_type", "id")
       property:
       __meta__:
           count: 2
