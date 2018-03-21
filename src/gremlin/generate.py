@@ -1,5 +1,8 @@
+import csv
+import os
 import random
 import string
+import shutil
 import sys
 
 from toposort import toposort_flatten
@@ -79,14 +82,20 @@ def get_tables_order(schema, db):
 
 
 def main(schema):
+    shutil.rmtree('.build', ignore_errors=True)
     orders = {}
     for db in get_databases(schema):
+        path = '.build/%s' % db
+        os.makedirs(path)
         orders[db] = get_tables_order(schema, db)
         for table in orders[db]:
             rows = generate_table_rows(schema, db, table)
             REFS[(db, table)] = rows
-            print('table %s' % table)
-            print(rows)
+            with open('%s/%s' % (path, table), 'w') as f:
+                writer = csv.writer(f)
+                writer.writerows(rows)
+            with open('%s/%s' % (path, 'order'), 'w') as f:
+                f.write(' '.join(orders[db]))
 
 
 if __name__ == '__main__':
