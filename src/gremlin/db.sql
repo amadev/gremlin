@@ -1,6 +1,6 @@
-create database nova;
+create database gremlin_test;
 
-use nova;
+use gremlin_test;
 
 create table flavor_type (
   id int auto_increment,

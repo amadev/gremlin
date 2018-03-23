@@ -1,15 +1,12 @@
 import csv
 import os
+from urllib.parse import urlparse
 import subprocess
+import sys
 
 
-def main():
-    creds = '-utest -ptest'
+def main(url):
     path = '.build'
-    cmd = 'mysql %(creds)s --execute "drop database nova"' % {'creds': creds}
-    subprocess.check_call(cmd, shell=True)
-    cmd = 'mysql %(creds)s < src/gremlin/db.sql' % {'creds': creds}
-    subprocess.check_call(cmd, shell=True)
     for db in os.listdir(path):
         with open('%s/%s/.order' % (path, db)) as f:
             files = ['%s/%s/%s' % (path, db, name)
@@ -30,10 +27,12 @@ def main():
                    '--local '
                    '--ignore-lines 1 '
                    '--columns %(columns)s '
-                   '%(creds)s '
+                   '-u %(user)s -h %(host)s -p%(pass)s '
                    '%(db)s '
                    '%(path)s') % {
-                       'creds': creds,
+                       'user': url.username,
+                       'host': url.hostname,
+                       'pass': url.password,
                        'db': db,
                        'path': fpath,
                        'columns': ','.join(columns)}
@@ -41,4 +40,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(urlparse(sys.argv[1]))

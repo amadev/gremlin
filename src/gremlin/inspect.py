@@ -52,7 +52,7 @@ def load_data(url):
 
 
 def main(url, databases):
-    data = load_data(urlparse(url))
+    data = load_data(url)
 
     constraints = {}
     for r in data['constraints']:
@@ -94,4 +94,4 @@ def main(url, databases):
 if __name__ == '__main__':
     db_url = sys.argv[1]
     databases = [] if len(sys.argv) < 3 else sys.argv[2].split(',')
-    print(yaml.dump(main(db_url, databases)))
+    print(yaml.dump(main(urlparse(db_url), databases)))
