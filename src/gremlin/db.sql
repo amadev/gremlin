@@ -27,3 +27,11 @@ create table instance (
   primary key(id),
   foreign key fk_flavor(flavor_id) references flavor(id)
 );
+
+create table resource_provider (
+  id int auto_increment,
+  name varchar(32),
+  parent_id int,
+  primary key(id),
+  foreign key fk_parent(parent_id) references resource_provider(id)
+);

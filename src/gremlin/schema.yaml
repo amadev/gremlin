@@ -20,3 +20,9 @@ nova:
       property: "'text property'"
       __meta__:
           count: 2
+  resource_provider:
+      id: auto_increment(10)
+      name: random_name(32)
+      parent_id: ref("resource_provider", "id")
+      __meta__:
+          count: 2

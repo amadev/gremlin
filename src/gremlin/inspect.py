@@ -53,10 +53,13 @@ def load_data(url):
 
 def main(url, databases):
     data = load_data(urlparse(url))
-    constraints = dict([((r['table_schema'], r['table_name'], r['column_name']),
-                         (r['referenced_table_name'],
-                          r['referenced_column_name']))
-                        for r in data['constraints']])
+
+    constraints = {}
+    for r in data['constraints']:
+        key = (r['table_schema'], r['table_name'], r['column_name'])
+        value = (r['referenced_table_name'], r['referenced_column_name'])
+        constraints[key] = value
+
     schema = {}
     for row in data['fields']:
         if databases and row['table_schema'] not in databases:
