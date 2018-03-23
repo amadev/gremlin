@@ -1,25 +1,55 @@
-* Mysql database migration test
+* Gremlin Database Test Tool
 
-** What is it?
+Gremlin helps to generate database test data.
+First, inspect database and generate a YAML schema for test data generation.
 
-This tool aims to check whether migration operation changes db behavior drastically.
+$ python src/gremlin/inspect.py mysql://test:test.0.0.1/information_schema
 
-Each case consists of steps:
+Schema could look like:
 
-- 1. Initialize DB structure (init.sql).
-- 2. Load test data (data.csv).
-- 3*. Start migration procedure (migrate.sql).
-- 4. Execute statement (execute.sql).
-- 5. Cleanup (cleanup.sql).
+#+BEGIN_SRC text
+nova_api:
+  aggregate_hosts:
+    __meta__:
+       count: 10
+    aggregate_id: ref("aggregates", "id")
+    created_at: '"2018-03-21 16:48:17"'
+    host: random_name(255)
+    id: auto_increment(100)
+    updated_at: '"2018-03-21 16:48:17"'
+  aggregates:
+    __meta__:
+      count: 10
+    created_at: '"2018-03-21 16:48:17"'
+    id: auto_increment(100)
+    name: random_name(255)
+    updated_at: '"2018-03-21 16:48:17"'
+    uuid: random_name(36)
+...
+nova_cell1:
+  agent_builds:
+    __meta__:
+      count: 10
+    architecture: random_name(255)
+    created_at: '"2018-03-21 16:48:17"'
+    deleted: auto_increment(100)
+    deleted_at: '"2018-03-21 16:48:17"'
+    hypervisor: random_name(255)
+    id: auto_increment(100)
+    md5hash: random_name(255)
+    os: random_name(255)
+    updated_at: '"2018-03-21 16:48:17"'
+    url: random_name(255)
+    version: random_name(255)
+...
+#+END_SRC
 
-Fisrt, it runs steps 1, 2, 4, 5 and provides execution time of step 4 as result.
-Second, it runs steps 1, 2, 3, 4, 5 where steps 3, 4 go in parallel
-and provides excecution time of steps 3 and 4.
+Second, generate CSV data for a schema.
 
-** How can I run it?
+$ python src/gremlin/generate.py src/gremlin/schema.yaml
 
-ls cases
-start_mt <case-name> -n10 -r1
+Csv files are saved in the .build directory <database_name>/<table_name>.csv.
 
-Results:
-| Init | Ex.time | Mig.time | Ex2.time | Ex2.qm |
+Third, load the generated data into a database;
+
+$ python src/gremlin/run.py mysql://test:test@127.0.0.1
