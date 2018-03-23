@@ -34,7 +34,8 @@ def load_data(url):
                                    'sys')
     """)
     constraints = execute(conn, """
-        SELECT table_name,
+        SELECT table_schema,
+               table_name,
                column_name,
                constraint_name,
                referenced_table_name,
@@ -52,7 +53,7 @@ def load_data(url):
 
 def main(url, databases):
     data = load_data(urlparse(url))
-    constraints = dict([(r['column_name'],
+    constraints = dict([((r['table_schema'], r['table_name'], r['column_name']),
                          (r['referenced_table_name'],
                           r['referenced_column_name']))
                         for r in data['constraints']])
@@ -66,8 +67,9 @@ def main(url, databases):
             schema[row['table_schema']][row['table_name']] = {
                 '__meta__': {'count': 10}}
         table = schema[row['table_schema']][row['table_name']]
-        if row['column_name'] in constraints:
-            value = 'ref("%s", "%s")' % constraints[row['column_name']]
+        column = (row['table_schema'], row['table_name'], row['column_name'])
+        if column in constraints:
+            value = 'ref("%s", "%s")' % constraints[column]
         elif row['data_type'] in (
                 'tinyint', 'smallint', 'bigint',
                 'int', 'float', 'double', 'decimal'):
