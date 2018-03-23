@@ -50,7 +50,7 @@ def load_data(url):
             'constraints': constraints}
 
 
-def main(url):
+def main(url, databases):
     data = load_data(urlparse(url))
     constraints = dict([(r['column_name'],
                          (r['referenced_table_name'],
@@ -58,6 +58,8 @@ def main(url):
                         for r in data['constraints']])
     schema = {}
     for row in data['fields']:
+        if databases and row['table_schema'] not in databases:
+            continue
         if row['table_schema'] not in schema:
             schema[row['table_schema']] = {}
         if row['table_name'] not in schema[row['table_schema']]:
@@ -85,4 +87,6 @@ def main(url):
 
 
 if __name__ == '__main__':
-    print(yaml.dump(main(sys.argv[1])))
+    db_url = sys.argv[1]
+    databases = [] if len(sys.argv) < 3 else sys.argv[2].split(',')
+    print(yaml.dump(main(db_url, databases)))
