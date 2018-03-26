@@ -26,7 +26,7 @@ def main(url):
                    '--lines-terminated-by "\r\n" '
                    '--local '
                    '--ignore-lines 1 '
-                   '--columns %(columns)s '
+                   "--columns '%(columns)s' "
                    '-u %(user)s -h %(host)s -p%(pass)s -P%(port)s '
                    '%(db)s '
                    '%(path)s') % {
@@ -36,7 +36,7 @@ def main(url):
                        'port': url.port or 3306,
                        'db': db,
                        'path': fpath,
-                       'columns': ','.join(columns)}
+                       'columns': ','.join(('`%s`' % c for c in columns))}
             subprocess.check_call(cmd, shell=True)
 
 
