@@ -27,12 +27,13 @@ def main(url):
                    '--local '
                    '--ignore-lines 1 '
                    '--columns %(columns)s '
-                   '-u %(user)s -h %(host)s -p%(pass)s '
+                   '-u %(user)s -h %(host)s -p%(pass)s -P%(port)s '
                    '%(db)s '
                    '%(path)s') % {
                        'user': url.username,
                        'host': url.hostname,
                        'pass': url.password,
+                       'port': url.port or 3306,
                        'db': db,
                        'path': fpath,
                        'columns': ','.join(columns)}
